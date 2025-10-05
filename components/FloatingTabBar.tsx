@@ -25,6 +25,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 export interface TabBarItem {
+  name: string;
   route: string;
   label: string;
   icon: string;
