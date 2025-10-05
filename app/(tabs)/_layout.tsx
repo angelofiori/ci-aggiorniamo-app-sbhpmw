@@ -1,12 +1,26 @@
+
 import React from 'react';
 import { Platform } from 'react-native';
 import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
+import { colors } from '@/styles/commonStyles';
 
 export default function TabLayout() {
   // Define the tabs configuration
   const tabs: TabBarItem[] = [
+    {
+      name: 'chats',
+      route: '/(tabs)/chats',
+      icon: 'message.fill',
+      label: 'Chat',
+    },
+    {
+      name: 'community',
+      route: '/(tabs)/community',
+      icon: 'person.3.fill',
+      label: 'Community',
+    },
     {
       name: '(home)',
       route: '/(tabs)/(home)/',
@@ -16,8 +30,8 @@ export default function TabLayout() {
     {
       name: 'profile',
       route: '/(tabs)/profile',
-      icon: 'person.fill',
-      label: 'Profile',
+      icon: 'person.circle.fill',
+      label: 'Profilo',
     },
   ];
 
@@ -25,13 +39,21 @@ export default function TabLayout() {
   if (Platform.OS === 'ios') {
     return (
       <NativeTabs>
+        <NativeTabs.Trigger name="chats">
+          <Icon sf="message.fill" drawable="ic_message" />
+          <Label>Chat</Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="community">
+          <Icon sf="person.3.fill" drawable="ic_community" />
+          <Label>Community</Label>
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="(home)">
           <Icon sf="house.fill" drawable="ic_home" />
           <Label>Home</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="profile">
-          <Icon sf="person.fill" drawable="ic_profile" />
-          <Label>Profile</Label>
+          <Icon sf="person.circle.fill" drawable="ic_profile" />
+          <Label>Profilo</Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     );
@@ -46,6 +68,8 @@ export default function TabLayout() {
           animation: 'none', // Remove fade animation to prevent black screen flash
         }}
       >
+        <Stack.Screen name="chats" />
+        <Stack.Screen name="community" />
         <Stack.Screen name="(home)" />
         <Stack.Screen name="profile" />
       </Stack>
