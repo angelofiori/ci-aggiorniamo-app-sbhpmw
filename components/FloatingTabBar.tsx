@@ -62,7 +62,7 @@ export default function FloatingTabBar({
         mass: 1,
       });
     }
-  }, [pathname, tabs]);
+  }, [pathname, tabs, indicatorPosition]);
 
   const handleTabPress = (route: string, index: number) => {
     indicatorPosition.value = withSpring(index, {
@@ -105,59 +105,15 @@ export default function FloatingTabBar({
           <View style={styles.tabsContainer}>
             {tabs.map((tab, index) => {
               const isActive = pathname.includes(tab.route);
-              const scale = useSharedValue(1);
-
-              const animatedStyle = useAnimatedStyle(() => ({
-                transform: [{ scale: scale.value }],
-              }));
-
-              const handlePressIn = () => {
-                scale.value = withSpring(0.9);
-              };
-
-              const handlePressOut = () => {
-                scale.value = withSpring(1);
-              };
-
+              
               return (
-                <AnimatedTouchableOpacity
+                <TabItem
                   key={tab.route}
-                  style={[styles.tab, animatedStyle]}
-                  onPress={() => handleTabPress(tab.route, index)}
-                  onPressIn={handlePressIn}
-                  onPressOut={handlePressOut}
-                  activeOpacity={1}
-                >
-                  <View style={styles.tabContent}>
-                    {isActive ? (
-                      <AnimatedIcon
-                        name={tab.activeIcon || tab.icon}
-                        size={24}
-                        color={colors.card}
-                        animation="bounce"
-                        duration={1500}
-                      />
-                    ) : (
-                      <IconSymbol
-                        name={tab.icon as any}
-                        size={24}
-                        color={isActive ? colors.card : colors.textSecondary}
-                      />
-                    )}
-                    
-                    <Text
-                      style={[
-                        styles.tabLabel,
-                        {
-                          color: isActive ? colors.card : colors.textSecondary,
-                          fontWeight: isActive ? '700' : '500',
-                        },
-                      ]}
-                    >
-                      {tab.label}
-                    </Text>
-                  </View>
-                </AnimatedTouchableOpacity>
+                  tab={tab}
+                  index={index}
+                  isActive={isActive}
+                  onPress={handleTabPress}
+                />
               );
             })}
           </View>
@@ -172,6 +128,69 @@ export default function FloatingTabBar({
         </View>
       </View>
     </SafeAreaView>
+  );
+}
+
+interface TabItemProps {
+  tab: TabBarItem;
+  index: number;
+  isActive: boolean;
+  onPress: (route: string, index: number) => void;
+}
+
+function TabItem({ tab, index, isActive, onPress }: TabItemProps) {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.9);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+  };
+
+  return (
+    <AnimatedTouchableOpacity
+      style={[styles.tab, animatedStyle]}
+      onPress={() => onPress(tab.route, index)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      activeOpacity={1}
+    >
+      <View style={styles.tabContent}>
+        {isActive ? (
+          <AnimatedIcon
+            name={tab.activeIcon || tab.icon}
+            size={24}
+            color={colors.card}
+            animation="bounce"
+            duration={1500}
+          />
+        ) : (
+          <IconSymbol
+            name={tab.icon as any}
+            size={24}
+            color={isActive ? colors.card : colors.textSecondary}
+          />
+        )}
+        
+        <Text
+          style={[
+            styles.tabLabel,
+            {
+              color: isActive ? colors.card : colors.textSecondary,
+              fontWeight: isActive ? '700' : '500',
+            },
+          ]}
+        >
+          {tab.label}
+        </Text>
+      </View>
+    </AnimatedTouchableOpacity>
   );
 }
 

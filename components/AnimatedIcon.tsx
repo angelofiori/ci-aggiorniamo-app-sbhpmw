@@ -63,7 +63,7 @@ export default function AnimatedIcon({
         );
         break;
     }
-  }, [animation, duration]);
+  }, [animation, duration, animationValue]);
 
   const animatedStyle = useAnimatedStyle(() => {
     switch (animation) {
